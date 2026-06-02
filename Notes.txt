@@ -1,0 +1,9 @@
+Montal: ecommerce website
+
+Categories:
+ - Maternity wear
+ - Robes
+ - Bridal clothes : sub-category [ Pants , Skirts, Shirts ]
+ - Bridal acccessories : sub-category [ Veil , Banner, Face on cover , Bags , Gloves ]
+ - Corsets
+ - Dresses: [ Long dress , Short dress  ]

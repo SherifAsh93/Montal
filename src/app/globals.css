@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream-50: #fdfaf6;
+  --color-cream-100: #faf5ee;
+  --color-cream-200: #f5ece0;
+  --color-cream-300: #eddcc8;
+  --color-gold-300: #e8d5a3;
+  --color-gold-400: #d4b96a;
+  --color-gold-500: #c4a35a;
+  --color-gold-600: #a8873d;
+  --color-gold-700: #8b6914;
+  --color-brand-50: #fdf8f0;
+  --color-brand-100: #f8eedc;
+  --color-brand-200: #edd5b0;
+  --color-brand-500: #c4a35a;
+  --color-brand-600: #a8873d;
+  --color-brand-700: #8b6914;
+  --color-dark-900: #1c1510;
+  --color-dark-800: #2d2218;
+  --color-dark-700: #3d3020;
+  --font-cormorant: "Cormorant Garamond", Georgia, serif;
+  --font-montserrat: "Montserrat", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-montserrat);
+  background-color: #fdfaf6;
+  color: #1c1510;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.6s ease forwards; }
+.animate-fade-in    { animation: fadeIn 0.4s ease forwards; }
+.animate-slide-in-right { animation: slideInRight 0.35s ease forwards; }
+.animate-marquee { animation: marquee 28s linear infinite; }
+
+.font-cormorant { font-family: var(--font-cormorant); }
+.font-montserrat { font-family: var(--font-montserrat); }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #faf5ee; }
+::-webkit-scrollbar-thumb { background: #d4b96a; border-radius: 99px; }
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  ring: 2px solid #c4a35a;
+}
+
+@media (display-mode: standalone) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+}
