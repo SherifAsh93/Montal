@@ -1,6 +1,7 @@
-const { PrismaClient } = require('../src/generated/prisma')
+const { Pool } = require('pg')
+const { randomUUID } = require('crypto')
 
-const prisma = new PrismaClient()
+const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 
 const categories = [
   { name: 'Maternity Wear', slug: 'maternity-wear', sortOrder: 1 },
@@ -34,27 +35,35 @@ const categories = [
 ]
 
 async function main() {
-  console.log('Seeding categories...')
-  for (const cat of categories) {
-    const { children, ...catData } = cat
-    const parent = await prisma.category.upsert({
-      where: { slug: catData.slug },
-      update: { name: catData.name, sortOrder: catData.sortOrder },
-      create: catData,
-    })
-    if (children) {
-      for (const child of children) {
-        await prisma.category.upsert({
-          where: { slug: child.slug },
-          update: { name: child.name, sortOrder: child.sortOrder, parentId: parent.id },
-          create: { ...child, parentId: parent.id },
-        })
+  const client = await pool.connect()
+  try {
+    console.log('Seeding categories...')
+    for (const cat of categories) {
+      const { children, ...catData } = cat
+      const id = randomUUID()
+      await client.query(
+        `INSERT INTO "Category" (id, name, slug, "sortOrder") VALUES ($1,$2,$3,$4)
+         ON CONFLICT (slug) DO UPDATE SET name=$2, "sortOrder"=$4`,
+        [id, catData.name, catData.slug, catData.sortOrder]
+      )
+      const parentRes = await client.query(`SELECT id FROM "Category" WHERE slug=$1`, [catData.slug])
+      const parentId = parentRes.rows[0].id
+
+      if (children) {
+        for (const child of children) {
+          await client.query(
+            `INSERT INTO "Category" (id, name, slug, "parentId", "sortOrder") VALUES ($1,$2,$3,$4,$5)
+             ON CONFLICT (slug) DO UPDATE SET name=$2, "parentId"=$4, "sortOrder"=$5`,
+            [randomUUID(), child.name, child.slug, parentId, child.sortOrder]
+          )
+        }
       }
     }
+    console.log('Categories seeded!')
+  } finally {
+    client.release()
+    await pool.end()
   }
-  console.log('Done!')
 }
 
-main()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect())
+main().catch(console.error)

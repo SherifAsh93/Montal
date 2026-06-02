@@ -12,7 +12,7 @@ export default function AdminCategoriesPage() {
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
-  const [adding, setAdding] = useState<string | false>(false)
+  const [adding, setAdding] = useState(false)
   const [newName, setNewName] = useState('')
   const [newSlug, setNewSlug] = useState('')
   const [newParent, setNewParent] = useState('')
@@ -101,7 +101,7 @@ export default function AdminCategoriesPage() {
           <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" /></div>
         ) : (
           <div className="space-y-2">
-            {categories.map((cat) => (
+            {categories.filter((c) => !c.parentId).map((cat) => (
               <div key={cat.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                 <div className="flex items-center gap-3 px-4 py-3">
                   {editing === cat.id ? (
